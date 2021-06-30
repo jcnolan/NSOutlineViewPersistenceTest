@@ -39,6 +39,7 @@ class ViewController: NSViewController {
             v.autosaveExpandedItems = true
             v.autosaveName = "outline"
         }
+        
         v.selectionHighlightStyle = .sourceList
         v.backgroundColor = .clear
         v.rowSizeStyle = NSTableView.RowSizeStyle.default
@@ -64,25 +65,7 @@ class ViewController: NSViewController {
             Item(name: "ba", children: []),
         ]),
     ]
-    
-    func expandOutline()
-    {
-        var itemsToExpand:[Item] = []
-        
-        for x in 0 ..< outline.numberOfRows {
-            
-            let item: Item = outline.item(atRow: x) as! Item
-            
-            if item.isExpanded {} else {}
-            itemsToExpand.append(item)
-//            outline.expandItem(item)
-        }
-        
-        for item in itemsToExpand {
-            outline.expandItem(item)
-        }
-    }
-    
+
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -104,11 +87,7 @@ class ViewController: NSViewController {
         self.outline.reloadData()
         self.outline.sizeLastColumnToFit()
         
-        //
-        
-   //     expandOutline()
     }
-    
 }
 
 extension ViewController: NSOutlineViewDataSource {
@@ -218,6 +197,4 @@ extension ViewController: NSOutlineViewDelegate {
         print("DELEGATE DID EXPAND", item.name, isExpanded, isParentExpanded)
     }
     
-    
 }
-
