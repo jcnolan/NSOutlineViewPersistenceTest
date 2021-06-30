@@ -23,6 +23,7 @@ class Item: NSObject, Codable {
 class ViewController: NSViewController {
     
     lazy var outline: NSOutlineView = {
+        
         let v = NSOutlineView()
         
         v.dataSource = self
@@ -112,7 +113,6 @@ class ViewController: NSViewController {
 
 extension ViewController: NSOutlineViewDataSource {
     
-    
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         guard let item = item as? Item else { return items.count }
         
@@ -168,33 +168,30 @@ extension ViewController: NSOutlineViewDelegate {
         let itemItem:Item = item as! Item
         
         let codedJson = try? JSONEncoder().encode(itemItem)
-        let loginPrefsDefaultJsonStr:String = String(data:codedJson!, encoding: String.Encoding.utf8) ?? ""
-        Swift.print("DefaultLoginPrefs: \(loginPrefsDefaultJsonStr)")
-        return loginPrefsDefaultJsonStr
-        
-   //     return item
+        let itemJsonStr:String = String(data:codedJson!, encoding: String.Encoding.utf8) ?? ""
+        Swift.print("persistentObject: \(itemJsonStr)")
+        return itemJsonStr
     }
     
     func outlineView(_ outlineView: NSOutlineView, itemForPersistentObject object: Any) -> Any? {
         
-         let jsonDecoder = JSONDecoder()
-         let loginPrefsSaved = object as? String ?? ""
-         let dataToDecode = loginPrefsSaved.data(using: String.Encoding.utf8)
-         
-         var myLoginPrefs: Item? = nil
-         
-         do {
-             myLoginPrefs = try jsonDecoder.decode(Item.self, from: dataToDecode!)
-         } catch let error {
-             print(error)
-         //    myLoginPrefs = LoginPrefs()
-         }
-         
-//        return object
-        return myLoginPrefs
+        let jsonDecoder = JSONDecoder()
+        let strToDecode = object as? String ?? ""
+        let dataToDecode = strToDecode.data(using: String.Encoding.utf8)
+        
+        var decodedItem: Item? = nil
+        
+        do {
+            decodedItem = try jsonDecoder.decode(Item.self, from: dataToDecode!)
+        } catch let error {
+            print(error)
+        }
+        Swift.print("persistentItem: \(strToDecode)")
+        return decodedItem
     }
     
     func outlineViewItemDidCollapse(_ notification: Notification) {
+        
         guard let item = notification.userInfo?["NSObject"] as? Item else {
             return
         }
@@ -208,6 +205,7 @@ extension ViewController: NSOutlineViewDelegate {
     }
     
     func outlineViewItemDidExpand(_ notification: Notification) {
+        
         guard let item = notification.userInfo?["NSObject"] as? Item else {
             return
         }
