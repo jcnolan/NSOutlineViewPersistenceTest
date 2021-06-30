@@ -105,7 +105,7 @@ class ViewController: NSViewController {
         
         //
         
-        expandOutline()
+   //     expandOutline()
     }
     
 }
