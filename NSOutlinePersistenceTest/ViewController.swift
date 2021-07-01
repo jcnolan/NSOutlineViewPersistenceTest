@@ -1,9 +1,10 @@
 //
 //  ViewController.swift
-//  NSOutlinePersistenceTest
+//  NSOutlinePersistenceTest --
 //
 //  Created by JC Nolan on 6/30/21.
 //
+// http://www.extelligentcocoa.org/nsoutlineview-part1-setting-up-an-outlineview/
 
 import Cocoa
 
@@ -21,6 +22,8 @@ class Item: NSObject, Codable {
 }
 
 class ViewController: NSViewController {
+    
+    // MARK: - NSOutlineView
     
     lazy var outline: NSOutlineView = {
         
@@ -66,6 +69,27 @@ class ViewController: NSViewController {
         ]),
     ]
 
+    func fetchNodeByName(items: [Item], name: String)->Item?
+    {
+        var retVal:Item? = nil
+        
+        for item in items {
+            if item.name == name {
+                retVal = item
+                break
+            } else {
+                if let rretVal = fetchNodeByName(items: item.children, name: name) {
+                    retVal = rretVal
+                    break
+                }
+            }
+        }
+        
+        return retVal
+    }
+    
+    // MARK: - Class Overrides
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -87,10 +111,13 @@ class ViewController: NSViewController {
         self.outline.reloadData()
         self.outline.sizeLastColumnToFit()
         
+        restoreSelectedNode()
     }
 }
 
 extension ViewController: NSOutlineViewDataSource {
+    
+    // MARK: - NSOutlineViewDataSource
     
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         guard let item = item as? Item else { return items.count }
@@ -116,7 +143,9 @@ extension ViewController: NSOutlineViewDataSource {
 }
 
 extension ViewController: NSOutlineViewDelegate {
-    
+
+    // MARK: - NSOutlineViewDelegate
+
     func outlineView(_ outlineView: NSOutlineView, isGroupItem item: Any) -> Bool {
         return false
     }
@@ -158,15 +187,17 @@ extension ViewController: NSOutlineViewDelegate {
         let strToDecode = object as? String ?? ""
         let dataToDecode = strToDecode.data(using: String.Encoding.utf8)
         
-        var decodedItem: Item? = nil
+        var returnItem: Item? = nil
         
         do {
-            decodedItem = try jsonDecoder.decode(Item.self, from: dataToDecode!)
+            let decodedItem = try jsonDecoder.decode(Item.self, from: dataToDecode!)
+            returnItem = fetchNodeByName(items: items, name: decodedItem.name)
         } catch let error {
             print(error)
         }
+        
         Swift.print("persistentItem: \(strToDecode)")
-        return decodedItem
+        return returnItem
     }
     
     func outlineViewItemDidCollapse(_ notification: Notification) {
@@ -197,4 +228,42 @@ extension ViewController: NSOutlineViewDelegate {
         print("DELEGATE DID EXPAND", item.name, isExpanded, isParentExpanded)
     }
     
+    // MARK: - Selection Persistence - http://ninecirclesofshell.com / https://github.com/pomalone91/OutlineDemo
+    
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        let node = outline.item(atRow: outline.selectedRow) as? Item
+        writeSelectedItem(node)
+    }
+    
+    /// Write selected item in the outlineView to NSUserDefault. Will be called whenever the selection changes.
+    func writeSelectedItem(_ node: Item?) {
+        
+        if let name = node?.name {
+            print("Writing state for node: \(name)")
+        }
+        UserDefaults.standard.set(node?.name, forKey: "selectedNode")
+        UserDefaults.standard.synchronize()
+    }
+    
+    /// Reads the last selected item from NSUserDefaults and selects it in outlineView. Will be called when view loads.
+    func restoreSelectedNode() {
+        
+        // Get selected node
+        if let itemName = UserDefaults.standard.object(forKey: "selectedNode") as? String {
+            
+            let node = fetchNodeByName(items: items, name: itemName)
+            
+            // Select the item
+            
+            selectItem(node, in: outline)
+        }
+    }
+
+    /// https://stackoverflow.com/questions/1096768/how-to-select-items-in-nsoutlineview-without-nstreecontroller
+    func selectItem(_ item: Any?, in outline: NSOutlineView?) {
+        
+        let itemIndex = outline?.row(forItem: item) ?? 0
+
+        outline?.selectRowIndexes(NSIndexSet(index: itemIndex) as IndexSet, byExtendingSelection: false)
+    }
 }

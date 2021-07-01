@@ -7,16 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "AC23A130-54C9-460E-861F-84DF9DE067C6"
+            uuid = "4C39DEFF-AB8C-4C9E-8A96-3011A9F8AFF7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NSOutlinePersistenceTest/ViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "192"
+            endingLineNumber = "192"
+            landmarkName = "outlineView(_:itemForPersistentObject:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "29481674-8943-4772-93DC-12912684685D"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NSOutlinePersistenceTest/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
-            landmarkName = "outlineView(_:numberOfChildrenOfItem:)"
+            startingLineNumber = "235"
+            endingLineNumber = "235"
+            landmarkName = "outlineViewSelectionDidChange(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
