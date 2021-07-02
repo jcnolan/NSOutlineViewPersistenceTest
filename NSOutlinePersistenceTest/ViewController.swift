@@ -1,10 +1,21 @@
 //
 //  ViewController.swift
-//  NSOutlinePersistenceTest --
+//  NSOutlinePersistenceTest
 //
 //  Created by JC Nolan on 6/30/21.
 //
-// http://www.extelligentcocoa.org/nsoutlineview-part1-setting-up-an-outlineview/
+
+// https://gist.github.com/floorish/4e13c7c28e211274b8d5a2dd32dcdc1a
+
+// some other interesting links
+//
+// https://www.extelligentcocoa.org/nsoutlineview-saving-expansion-status/
+// https://developer.apple.com/documentation/appkit/nsoutlineview/1530638-autosaveexpandeditems
+// https://stackoverflow.com/questions/43829243/swift-3-nsoutlineview-with-expandable-items
+// https://newbedev.com/autosave-expanded-items-of-nsoutlineview-doesn-t-work - I think this is likely something I'm doing wrong... not returning the right thing?
+// https://stackoverflow.com/questions/63351982/why-view-based-nsoutlineview-with-autosaveexpandeditems-true-ignores-expanded-up - Led me to the strategy I'll likely use (hand roll)
+// https://www.appcoda.com/macos-programming-nsoutlineview/ - oddly useless as it doesn't include that portion, but well written :)
+//
 
 import Cocoa
 
